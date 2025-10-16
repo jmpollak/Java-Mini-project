@@ -182,7 +182,7 @@ public class CardLayoutFrame extends JFrame
         correctAnswers.add(1);
     }
 
-    // Reads text files and imports the questions and asnwers
+    // Reads text files and imports the questions and answers
     public void importQuestionsFromFile()
     {
         questionGroups = new ArrayList<>();
@@ -215,6 +215,7 @@ public class CardLayoutFrame extends JFrame
                 }
                 // Save the line to an Array List or other Data Structure
                 questionSet1++;
+                // Testing
                 System.out.println(questionSet1 + ": " + line);
                 questionTextString.add(line);
             }
