@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/Java-Mini-project.iml" filepath="$PROJECT_DIR$/.idea/Java-Mini-project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Mini Project/Mini Project.iml" filepath="$PROJECT_DIR$/Mini Project/Mini Project.iml" />
+    </modules>
+  </component>
+</project>
