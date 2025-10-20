@@ -188,6 +188,7 @@ public class CardLayoutFrame extends JFrame
                 }
                 // Save the line to an Array List or other Data Structure
                 questionSet1++;
+                // Testing
                 System.out.println(questionSet1 + ": " + line);
                 questionTextString.add(line);
             }
