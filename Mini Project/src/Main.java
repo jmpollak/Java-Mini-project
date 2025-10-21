@@ -6,7 +6,7 @@ public class Main
     {
         CardLayoutFrame frame = new CardLayoutFrame();
         frame.setSize(800,600);
-        frame.setTitle("Trivia Game by John");
+        frame.setTitle("Trivia Game by John and Ella");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null); // Set the location of this frame by some component. null means center
         frame.setVisible(true);

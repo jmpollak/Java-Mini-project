@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+import java.awt.Paint;
+import java.awt.Color;
 
 public class CardLayoutFrame extends JFrame
 {
@@ -152,35 +154,6 @@ public class CardLayoutFrame extends JFrame
         cardPanel.add(resultsPanel, "R");
     }
 
-    // Imports the question and answer via Hard code
-    private void importQuestions()
-    {
-        questionGroups = new ArrayList<>();
-        correctAnswers = new ArrayList<>();
-        // This is immutable
-        questionGroups.add(List.of("Question 1: What do we refer to BST in 4319 ?",
-                "British Summer Time",
-                "Breadth Search Tree",
-                "Binary Search Tree",
-                "None of above"));
-        correctAnswers.add(2);
-
-        questionGroups.add(List.of("Which class belongs to Java Swing?",
-                "NumberFormatException",
-                "String",
-                "Graphics",
-                "None of above"));
-        correctAnswers.add(3);
-
-        questionGroups.add(List.of("What is the capital of France?", "Paris", "London", "Berlin", "Rome"));
-        correctAnswers.add(0);
-
-        questionGroups.add(List.of("Which planet is known as the Red Planet?", "Earth", "Venus", "Mars", "Jupiter"));
-        correctAnswers.add(2);
-
-        questionGroups.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
-    }
 
     // Reads text files and imports the questions and answers
     public void importQuestionsFromFile()
@@ -302,9 +275,11 @@ public class CardLayoutFrame extends JFrame
         }
     }
 
+
     // Handles All buttons for the Game
-    private class OptionButtonHandler implements ActionListener
-    {
+    private class OptionButtonHandler implements ActionListener {
+
+
         private int index;
         public OptionButtonHandler(int index) // Allows us to get the passed value into this handler
         {
@@ -316,14 +291,18 @@ public class CardLayoutFrame extends JFrame
             //Checking if the answer is correct
             if(index == correctAnswers.get(currentQuestionIndex))
             {
+                optionButtons[index].setBackground(Color.GREEN);
                 // User gets a point
                 score++;
                 JOptionPane.showMessageDialog(null,"Correct! Current Score " + score + "/10");
+                optionButtons[index].setBackground(null);
             }
             else
             {
+                optionButtons[index].setBackground(Color.RED);
                 // No point
                 JOptionPane.showMessageDialog(null,"Incorrect! Current Score" + score + "/10");
+                optionButtons[index].setBackground(null);
             }
             //Increment the question index
             currentQuestionIndex++;
