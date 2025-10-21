@@ -149,6 +149,10 @@ public class CardLayoutFrame extends JFrame
     // Fourth Unique Panel Results/Score Screen
     private void createResultsPanel()
     {
+        ResultLabelFrame framyLabel = new ResultLabelFrame(); // create LabelFrame
+        framyLabel.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+        framyLabel.setSize( 500, 500 ); // set frame size
+        framyLabel.setVisible( true ); // display frame
         JPanel resultsPanel = new JPanel();
         resultsPanel.add(new JLabel("Results Screen: " + username + " scored: " + score));
         cardPanel.add(resultsPanel, "R");
