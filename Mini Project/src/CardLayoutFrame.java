@@ -62,29 +62,6 @@ public class CardLayoutFrame extends JFrame
     // General Layout of the Program
     public CardLayoutFrame()
     {
-        // 1. instantiate components (no local shadowing)
-        btn1 = new JButton("Load Set 1");
-        btn2 = new JButton("Load Set 2");
-        btn3 = new JButton("Load Set 3");
-        btn4 = new JButton("Load Set 4");
-
-        // 2. add to container (example panel)
-        JPanel p = new JPanel();
-        p.add(btn1);
-        p.add(btn2);
-        p.add(btn3);
-        p.add(btn4);
-        add(p);
-
-        // 3. wire listeners after instantiation
-        setupButtons();
-
-        // frame settings
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         currentQuestionIndex = 0;
@@ -97,7 +74,7 @@ public class CardLayoutFrame extends JFrame
         createUsernamePanel();
 
         // category page
-        createQuestionPanel();
+        createCategoryPanel();
 
         // second page - quiz
         createGamePanel();
@@ -109,7 +86,9 @@ public class CardLayoutFrame extends JFrame
         usernameButton.addActionListener(handler);
         playButton.addActionListener(handler);
         nextButton.addActionListener(handler);
+        categoryButton.addActionListener(handler);
     }
+
     private void setupButtons() {
         // Optional defensive check
         if (btn1 == null || btn2 == null || btn3 == null || btn4 == null) {
@@ -134,7 +113,6 @@ public class CardLayoutFrame extends JFrame
         }
     }
 
-    // First Unique Panel Welcomes User
     private void createWelcomePanel()
     {
         // Creates the Panel
@@ -150,9 +128,10 @@ public class CardLayoutFrame extends JFrame
 
         // Adds the button to the panel adds it to the panel stack
         startButton = new JButton("Start game!");
-        welcomePanel.add(categoryButton, BorderLayout.SOUTH);
+        welcomePanel.add(startButton, BorderLayout.SOUTH);
         cardPanel.add(welcomePanel, "W");
     }
+
 
     // Second Unique Panel Allow User to add their Name and start game
     private void createUsernamePanel()
@@ -175,27 +154,54 @@ public class CardLayoutFrame extends JFrame
         usernamePanel.add(usernameButtonPanel, BorderLayout.NORTH);
 
         // create a nested play button panel
-        JPanel playButtonPanel = new JPanel(new FlowLayout());
-        playButton = new JButton("Play!");
-        playButtonPanel.add(playButton);
-        usernamePanel.add(playButtonPanel, BorderLayout.SOUTH);
+        JPanel categoryButtonPanel = new JPanel(new FlowLayout());
+        categoryButton = new JButton("Choose a Question Category!");
+        categoryButtonPanel.add(categoryButton);
+        usernamePanel.add(categoryButtonPanel, BorderLayout.SOUTH);
 
         //add this nested play button panel to the main username panel
         cardPanel.add(usernamePanel, "U");
     }
 
     // A button panel that allows the user to select which question set they want to use
-    private void createQuestionPanel()
+    private void createCategoryPanel()
     {
-        JPanel questionPanel = new JPanel(new BorderLayout());
+        JPanel categoryPanel = new JPanel(new BorderLayout());
         JPanel nestedButtonPanel = new JPanel(new GridLayout(2,2,10,10));
 
+        // 1. instantiate components (no local shadowing)
+        btn1 = new JButton("Load Set 1");
+        btn2 = new JButton("Load Set 2");
+        btn3 = new JButton("Load Set 3");
+        btn4 = new JButton("Load Set 4");
+
+        // 2. add to container (example panel)
+        JPanel p = new JPanel();
+        p.add(btn1);
+        p.add(btn2);
+        p.add(btn3);
+        p.add(btn4);
+        add(p);
+
+        // 3. wire listeners after instantiation
+        setupButtons();
+
+        // frame settings
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+
         // Adding the nested button panel to the game panel
-        questionPanel.add(nestedButtonPanel,BorderLayout.CENTER);
-        questionPanel.add(startButton, BorderLayout.SOUTH);
+        categoryPanel.add(nestedButtonPanel,BorderLayout.CENTER);
+        // create a nested play button panel
+        JPanel playButtonPanel = new JPanel(new FlowLayout());
+        playButton = new JButton("Play!");
+        playButtonPanel.add(playButton);
+        usernamePanel.add(playButtonPanel, BorderLayout.SOUTH);
 
         /* remember to add this username panel to the cardPanel object, and give it a name */
-        cardPanel.add(questionPanel, "Q");
+        cardPanel.add(categoryPanel, "Q");
     }
 
     // Third Unique Panel The Game
@@ -313,7 +319,7 @@ public class CardLayoutFrame extends JFrame
             else if(e.getSource() == categoryButton)
             {
                 // Restart the game back to the welcome screen and set the score to 0
-                setupButtons();
+                createCategoryPanel();
                 cardLayout.show(cardPanel, "Q");
             }
         }
