@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
-import java.awt.Paint;
 import java.awt.Color;
 
 public class CardLayoutFrame extends JFrame
@@ -18,7 +17,11 @@ public class CardLayoutFrame extends JFrame
     private JButton nextButton;
     private JButton usernameButton;
     private JButton playButton;
+    private JButton againButton;
     private JButton[] optionButtons = new JButton[4];
+
+    // Button Handler
+    private ButtonHandler handler = new ButtonHandler();
 
     // The Card Layout
     private CardLayout cardLayout;
@@ -26,7 +29,6 @@ public class CardLayoutFrame extends JFrame
     // All the Panels
     private JPanel cardPanel;
     private JPanel usernamePanel;
-    //private JPanel nestedButtonPanel;
 
     // All the Labels
     private JLabel questionLabel;
@@ -65,7 +67,8 @@ public class CardLayoutFrame extends JFrame
         createGamePanel();
 
         add(cardPanel);
-        ButtonHandler handler = new ButtonHandler();
+
+        // Adds all the button handlers
         startButton.addActionListener(handler);
         usernameButton.addActionListener(handler);
         playButton.addActionListener(handler);
@@ -75,46 +78,50 @@ public class CardLayoutFrame extends JFrame
     // First Unique Panel Welcomes User
     private void createWelcomePanel()
     {
+        // Creates the Panel
         JPanel welcomePanel = new JPanel(new BorderLayout());
 
+        ImageIcon welcomeIcon = new ImageIcon("Mini Project/src/openImage.jpg");
+        welcomePanel.add(new JLabel(welcomeIcon), BorderLayout.CENTER);
+
+        // Adds the title
         JLabel title = new JLabel("Welcome Screen", SwingConstants.CENTER);
         title.setFont(new Font("Arial", Font.BOLD, 24));
-        welcomePanel.add(title, BorderLayout.CENTER);
+        welcomePanel.add(title, BorderLayout.NORTH);
 
+        // Adds the button to the panel adds it to the panel stack
         startButton = new JButton("Start game!");
         welcomePanel.add(startButton, BorderLayout.SOUTH);
-        /* remember to add this username panel to the cardPanel object, and give it
-        a name */
         cardPanel.add(welcomePanel, "W");
     }
 
     // Second Unique Panel Allow User to add their Name and start game
     private void createUsernamePanel()
     {
-        //create main panel
         usernamePanel = new JPanel(new BorderLayout());
-        /* create a nested username button panel */
         JPanel usernameButtonPanel = new JPanel(new FlowLayout());
+
         //create input field
         inputField = new JTextField("Enter a username");
         inputField.setFont(new Font("Arial", Font.PLAIN, 20));
+
         //create username button
         usernameButton = new JButton("set username");
-        //add the input field to the username button panel
+
+        //add the input field and the username button to the username button panel
         usernameButtonPanel.add(inputField);
-        //add the username button to the username button panel
         usernameButtonPanel.add(usernameButton);
+
         //add this nested username button panel to the main username panel
         usernamePanel.add(usernameButtonPanel, BorderLayout.NORTH);
-        /* create a nested play button panel */
+
+        // create a nested play button panel
         JPanel playButtonPanel = new JPanel(new FlowLayout());
-        //create play button to start the game
         playButton = new JButton("Play!");
-        //add the play button the play button panel
         playButtonPanel.add(playButton);
-        //add this nested play button panel to the main username panel
         usernamePanel.add(playButtonPanel, BorderLayout.SOUTH);
-        /* remember to add this username panel to the cardPanel object, and give it a name */
+
+        //add this nested play button panel to the main username panel
         cardPanel.add(usernamePanel, "U");
     }
 
@@ -149,15 +156,31 @@ public class CardLayoutFrame extends JFrame
     // Fourth Unique Panel Results/Score Screen
     private void createResultsPanel()
     {
-        ResultLabelFrame framyLabel = new ResultLabelFrame(); // create LabelFrame
-        framyLabel.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        framyLabel.setSize( 500, 500 ); // set frame size
-        framyLabel.setVisible( true ); // display frame
-        JPanel resultsPanel = new JPanel();
-        resultsPanel.add(new JLabel("Results Screen: " + username + " scored: " + score));
+        // Adds the Result title to the Panel
+        JPanel resultsPanel = new JPanel(new BorderLayout());
+        JLabel resultsLabel = new JLabel("Results", SwingConstants.CENTER);
+        resultsLabel.setFont(new Font("Arial", Font.BOLD,24));
+        resultsPanel.add(resultsLabel, BorderLayout.NORTH);
+
+        // Adds the Username and their score
+        JPanel resultsUserNamePanel = new JPanel(new BorderLayout());
+        JLabel resultsUserNameLabel = new JLabel(username + ": " + score + "/10", SwingConstants.CENTER);
+        resultsUserNameLabel.setFont(new Font("Arial", Font.BOLD,16));
+        resultsPanel.add(resultsUserNameLabel, BorderLayout.CENTER);
+
+        // Adds the Result Image
+        ImageIcon resultsIcon = new ImageIcon("Mini Project/src/resultsImage.jpg");
+        resultsPanel.add(new JLabel(resultsIcon), BorderLayout.NORTH);
+
+        // Adds in the Play again button in a smaller style on the bottom
+        JPanel againButtonPanel = new JPanel(new FlowLayout());
+        againButton = new JButton("Again");
+        againButtonPanel.add(againButton);
+        resultsPanel.add(againButtonPanel, BorderLayout.SOUTH);
+
+        againButton.addActionListener(handler);
         cardPanel.add(resultsPanel, "R");
     }
-
 
     // Reads text files and imports the questions and answers
     public void importQuestionsFromFile()
@@ -180,7 +203,7 @@ public class CardLayoutFrame extends JFrame
             // Counter used for indexing the file
             int questionSet1 = 0;
 
-            String line = "";
+            String line;
             // Reading the text file
             while (true)
             {
@@ -233,7 +256,7 @@ public class CardLayoutFrame extends JFrame
     // Handles the Questions for the game
     private void loadNextQuestion()
     {
-        if (questionGroups == null || questionGroups.size() == 0 || currentQuestionIndex >= questionGroups.size())
+        if (questionGroups == null || questionGroups.isEmpty() || currentQuestionIndex >= questionGroups.size())
         {
             createResultsPanel();
             cardLayout.show(cardPanel, "R"); // Show Results
@@ -276,9 +299,14 @@ public class CardLayoutFrame extends JFrame
                 createResultsPanel();
                 cardLayout.show(cardPanel, "R"); // show results
             }
+            else if(e.getSource() == againButton)
+            {
+                // Restart the game back to the welcome screen and set the score to 0
+                score = 0;
+                cardLayout.show(cardPanel, "W");
+            }
         }
     }
-
 
     // Handles All buttons for the Game
     private class OptionButtonHandler implements ActionListener {
