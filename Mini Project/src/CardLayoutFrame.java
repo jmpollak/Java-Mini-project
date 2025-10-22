@@ -16,9 +16,11 @@ public class CardLayoutFrame extends JFrame
     private JButton startButton;
     private JButton nextButton;
     private JButton usernameButton;
+    private JButton questionsButton;
     private JButton playButton;
     private JButton againButton;
     private JButton[] optionButtons = new JButton[4];
+    private JButton[] questionSetButtons = new JButton[4];
 
     // Button Handler
     private ButtonHandler handler = new ButtonHandler();
@@ -32,6 +34,7 @@ public class CardLayoutFrame extends JFrame
 
     // All the Labels
     private JLabel questionLabel;
+    private JLabel questionSetLabel;
 
     // Used for Username
     private JTextField inputField;
@@ -55,15 +58,18 @@ public class CardLayoutFrame extends JFrame
 
         // Adds the questions
         //importQuestions(); // Hard Code Method
-        importQuestionsFromFile(); // Reading from File
+        //importQuestionsFromFile(); // Reading from File
 
-        // first page - welcome
+        // welcome
         createWelcomePanel();
 
         // username page
         createUsernamePanel();
 
-        // second page - quiz
+        // select question type
+        createQuestionSetPanel();
+
+        // quiz
         createGamePanel();
 
         add(cardPanel);
@@ -117,7 +123,7 @@ public class CardLayoutFrame extends JFrame
 
         // create a nested play button panel
         JPanel playButtonPanel = new JPanel(new FlowLayout());
-        playButton = new JButton("Play!");
+        playButton = new JButton("Pick your category");
         playButtonPanel.add(playButton);
         usernamePanel.add(playButtonPanel, BorderLayout.SOUTH);
 
@@ -125,11 +131,51 @@ public class CardLayoutFrame extends JFrame
         cardPanel.add(usernamePanel, "U");
     }
 
-    // Third Unique Panel The Game
+    // Third Unique Panel Selecting the question type
+    private void createQuestionSetPanel()
+    {
+        JPanel questionSetPanel = new JPanel(new BorderLayout());
+
+        questionSetLabel = new JLabel("Select your question set",SwingConstants.CENTER);
+        questionSetLabel.setFont(new Font("Arial", Font.BOLD,16));
+        questionSetPanel.add(questionSetLabel,BorderLayout.NORTH);
+
+        // Putting in the Question Set Option Buttons
+        JPanel nestedButtonPanel = new JPanel(new GridLayout(2,2,10,10));
+        // Hard Coding the different buttons
+        questionSetButtons[0] = new JButton("Lord of the Rings/Hobbit");
+        questionSetButtons[0].addActionListener(new QuestionButtonHandler(0));
+        nestedButtonPanel.add(questionSetButtons[0]);
+
+        questionSetButtons[1] = new JButton("Star Wars");
+        questionSetButtons[1].addActionListener(new QuestionButtonHandler(1));
+        nestedButtonPanel.add(questionSetButtons[1]);
+
+        questionSetButtons[2] = new JButton("Marvel");
+        questionSetButtons[2].addActionListener(new QuestionButtonHandler(2));
+        nestedButtonPanel.add(questionSetButtons[2]);
+
+        questionSetButtons[3] = new JButton("Harry Potter");
+        questionSetButtons[3].addActionListener(new QuestionButtonHandler(3));
+        nestedButtonPanel.add(questionSetButtons[3]);
+
+        // Putting all the buttons on the panel
+        questionSetPanel.add(nestedButtonPanel, BorderLayout.CENTER);
+
+        // create a nested play button panel
+        JPanel playButtonPanel = new JPanel(new FlowLayout());
+        playButton = new JButton("Play!");
+        playButtonPanel.add(playButton);
+        usernamePanel.add(playButtonPanel, BorderLayout.SOUTH);
+
+        cardPanel.add(questionSetPanel, "Q");
+    }
+    // Fourth Unique Panel The Game
     private void createGamePanel()
     {
         JPanel gamePanel = new JPanel(new BorderLayout());
 
+        // PlaceHolder to be filled in later
         questionLabel = new JLabel("Place holder for questions",SwingConstants.CENTER);
         questionLabel.setFont(new Font("Arial", Font.BOLD,16));
         gamePanel.add(questionLabel,BorderLayout.NORTH);
@@ -153,7 +199,7 @@ public class CardLayoutFrame extends JFrame
         cardPanel.add(gamePanel, "G");
     }
 
-    // Fourth Unique Panel Results/Score Screen
+    // Fifth Unique Panel Results/Score Screen
     private void createResultsPanel()
     {
         // Adds the Result title to the Panel
@@ -183,7 +229,7 @@ public class CardLayoutFrame extends JFrame
     }
 
     // Reads text files and imports the questions and answers
-    public void importQuestionsFromFile()
+    public void importQuestionsFromFile(String questionSetFilePath, String answerSetFilePath)
     {
         questionGroups = new ArrayList<>();
         correctAnswers = new ArrayList<>();
@@ -193,8 +239,8 @@ public class CardLayoutFrame extends JFrame
         try
         {
             // Used to import the file for our questions
-            FileReader fileReaderQuestionSet1 = new FileReader("Mini Project/src/questionSet1.txt"); // File location needs to be from src parent directory
-            FileReader fileReaderAnswerSet1 = new FileReader("Mini Project/src/answersSet1.txt");
+            FileReader fileReaderQuestionSet1 = new FileReader(questionSetFilePath); // File location needs to be from src parent directory
+            FileReader fileReaderAnswerSet1 = new FileReader(answerSetFilePath);
 
             // Reads the imported file and adds it to the buffer
             BufferedReader bufferedReaderQuestionSet = new BufferedReader(fileReaderQuestionSet1);
@@ -289,8 +335,10 @@ public class CardLayoutFrame extends JFrame
             }
             else if (e.getSource() == playButton)
             {
-                // Loads the questions
-                loadNextQuestion();
+                cardLayout.show(cardPanel, "Q");
+            }
+            else if (e.getSource() == questionsButton)
+            {
                 // show quiz game
                 cardLayout.show(cardPanel, "G");
             }
@@ -302,6 +350,7 @@ public class CardLayoutFrame extends JFrame
             else if(e.getSource() == againButton)
             {
                 // Restart the game back to the welcome screen and set the score to 0
+                currentQuestionIndex = 0;
                 score = 0;
                 cardLayout.show(cardPanel, "W");
             }
@@ -309,10 +358,9 @@ public class CardLayoutFrame extends JFrame
     }
 
     // Handles All buttons for the Game
-    private class OptionButtonHandler implements ActionListener {
-
-
-        private int index;
+    private class OptionButtonHandler implements ActionListener
+    {
+        private final int index;
         public OptionButtonHandler(int index) // Allows us to get the passed value into this handler
         {
             this.index = index;
@@ -340,6 +388,45 @@ public class CardLayoutFrame extends JFrame
             currentQuestionIndex++;
             // Go to the next question
             loadNextQuestion();
+        }
+    }
+
+    // Handles the buttons for selecting which question set to use
+    private class QuestionButtonHandler implements ActionListener
+    {
+        private final int index;
+        public QuestionButtonHandler(int index)
+        {
+            this.index = index;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            switch (index)
+            {
+                case 0:
+                    importQuestionsFromFile("Mini Project/src/questionSet1.txt","Mini Project/src/answerSet1.txt");
+                    loadNextQuestion();
+                    cardLayout.show(cardPanel, "G");
+                    break;
+                case 1:
+                    importQuestionsFromFile("Mini Project/src/questionSet2.txt","Mini Project/src/answerSet2.txt");
+                    loadNextQuestion();
+                    cardLayout.show(cardPanel, "G");
+                    break;
+                case 2:
+                    importQuestionsFromFile("Mini Project/src/questionSet3.txt","Mini Project/src/answerSet3.txt");
+                    loadNextQuestion();
+                    cardLayout.show(cardPanel, "G");
+                    break;
+                case 3:
+                    importQuestionsFromFile("Mini Project/src/questionSet4.txt","Mini Project/src/answerSet4.txt");
+                    loadNextQuestion();
+                    cardLayout.show(cardPanel, "G");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -12,6 +12,6 @@ public class Main
         frame.setVisible(true);
 
         // Testing import file
-        frame.importQuestionsFromFile();
+        //frame.importQuestionsFromFile();
     }
 }
